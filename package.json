@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/zrowe/Constructor-Hangman#readme",
   "dependencies": {
-    "prompt": "^1.0.0"
+    "colors": "^1.1.2",
+    "prompt": "^1.0.0",
+    "simple-banner": "^1.0.7"
   }
 }
