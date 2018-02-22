@@ -2,9 +2,16 @@ var prompt = require('prompt');
 var Word = require("./word.js");
 var colors = require('colors/safe');
 var banner = require('simple-banner');
-
+var request = require("request");
 
 banner.set("The Amazing Constructor-Hangman", "Cobbled together by zrowe", 0);
+
+function getWord(callback) {
+    var url = "https://nlp.fi.muni.cz/projekty/random_word/run.cgi?language_selection=en&word_selection=nouns&model_selection=norm&length_selection=8&probability_selection=true";
+    request(url, function(error, response, body) {
+        callback(body.trim());
+    });
+}
 
 function GuessTracker() {
     this.allowed = 10;
@@ -21,7 +28,6 @@ function GuessTracker() {
 prompt.start();
 prompt.message = "";
 prompt.delimiter = "";
-
 var schema = {
     properties: {
         letter: {
@@ -35,10 +41,8 @@ var schema = {
     }
 };
 
-function getGuess() {
-
+function getGuess(mySecretWord) {
     if (myGuesses.remaining > 0) {
-
         prompt.get(schema, function(err, result) {
             if (err) { console.log(err); };
             var char = result.letter.toLowerCase() // flatten the input
@@ -52,30 +56,28 @@ function getGuess() {
             }
             console.log("\t" + mySecretWord.getDisplay() + "\n");
             if (mySecretWord.getDisplay().includes("_")) {
-                getGuess();
+                getGuess(mySecretWord);
             } else {
                 console.log("\u0007You Guessed It!".rainbow);
             };
-
         });
     };
 }
 
+function startRound(word) {
+    // console.log(word);
+    // var mySecretWord = new Word("xyzzy"); // store in constructor   
+    var mySecretWord = new Word(word); // store in constructor
+    console.log("\t" + mySecretWord.getDisplay() + "\n"); // show initial pattern
+    getGuess(mySecretWord);
+}
 
 // Initialize
+
 var wins = 0;
 var loses = 0;
 var myGuesses = new GuessTracker();
 
-// TODO:  Randomly selects a word and uses the Word constructor to store it
-var mySecretWord = new Word("xyzzy"); // store in constructor
-console.log("\t" + mySecretWord.getDisplay() + "\n"); // show initial pattern
-getGuess();
-
-
-// https://nlp.fi.muni.cz/projekty/random_word/run.cgi?language_selection=en&word_selection=nouns&model_selection=norm&length_selection=8&probability_selection=true
-// request('http://www.google.com', function (error, response, body) {
-//   console.log('error:', error); // Print the error if one occurred
-//   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-//   console.log('body:', body); // Print the HTML for the Google homepage.
-// });
+console.log("Standby while we get a random word....\n")
+// Randomly selects a word and uses the Word constructor to store it and starts a round
+getWord(startRound);

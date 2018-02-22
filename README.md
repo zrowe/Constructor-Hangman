@@ -1,4 +1,4 @@
-# Constructor-Hangman
+# Constructor-Hangman  V.1.0.0
 
 Constructor-Hangman is yet another edition of the world-famous hangman word-guessing game. This one, however, is terminal based and thereby reminiscent of the good ol' days. 
 
@@ -15,7 +15,7 @@ Constructor-Hangman was built and tested with the following nodeJS NPM packages:
 | colors          | 1.1.2   |
 | prompt          | 1.0.0   |
 | simple-banner   | 1.0.7   |
-
+| request   			| 2.83.0  |
 
 ### Installing
 
